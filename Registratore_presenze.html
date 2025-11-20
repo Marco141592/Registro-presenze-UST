@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro presenze web UST</title>
+</head>
+<body>
+    <input type="text" id="nome" placeholder="Inserisci il tuo nome">
+    <button id="btnRegistra">Registra</button>
+
+    <script>
+        // Assicurati che tutto il codice JS venga eseguito dopo il caricamento del DOM
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const btn = document.getElementById("btnRegistra");
+
+            btn.addEventListener("click", function() {
+                const nome = document.getElementById("nome").value;
+                if(!nome) {
+                    alert("Inserisci un nome prima di registrare!");
+                    return;
+                }
+
+                console.log("Invio richiesta…");
+
+                fetch("https://script.google.com/macros/s/AKfycbwLWNaaY8sZRUgMwu16_bTW9H3GpHly11jtxQRjEiy2V907ecKBPYo-YVhpPlZkOHqp7A/exec", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({nome: nome})
+                })
+                .then(r => r.json())
+                .then(res => {
+                    console.log("Risposta ricevuta:", res);
+                    if(res.result === "ok") {
+                        alert("Presenza registrata!");
+                    } else {
+                        alert("Errore dal server: " + JSON.stringify(res));
+                    }
+                })
+                .catch(err => {
+                    console.error("Errore fetch:", err);
+                    alert("Errore fetch: " + err);
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
